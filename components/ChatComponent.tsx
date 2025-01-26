@@ -7,6 +7,7 @@ import { SystemPrompt } from '@/constant';
 import { Terminal } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { useFileGroup } from './context/FileGroupContext';
+import { DemoApps } from '@/constant/DemoApps';
 
 export interface File {
     contents: string;
@@ -41,7 +42,7 @@ const ChatComponent = () => {
             const content = JSON.parse(messages[messages.length - 1].content);
             const { files } = content[0] as MessageContent;
             const filesGroup = files?.[0] as Files;
-            console.log("use effect",filesGroup);
+            console.log("use effect", filesGroup);
             setFileGroup(filesGroup);
         }
     }, [messages, setFileGroup]);
@@ -51,10 +52,29 @@ const ChatComponent = () => {
     return (
         <div className='flex bg-white/5 flex-col backdrop-blur-[2px] border p-2 rounded-xl'>
             <ScrollArea className="p-4 h-[72dvh]">
+                {messages.length <= 1 && (
+                    <div className='h-[68dvh] flex-1 flex flex-col items-center justify-center w-full'>
+                        {DemoApps.map((item, index) =>
+                            <button onClick={() => sendUserMessage(JSON.stringify(item.prompt as string))} key={index} className='flex overflow-auto px-4 shadow-sm bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground py-4 my-2 rounded-2xl w-full font-serif gap-2 items-center'>
+                                <div className='bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground p-2 rounded-xl'>
+                                    {item.icon}
+                                </div>
+                                <div>
+                                    <div className='text-sm text-start line-clamp-1 font-semibold text-accent-foreground'>
+                                        {item.name}
+                                    </div>
+                                    <div className='text-sm text-muted-foreground line-clamp-1'>
+                                        {item.description}
+                                    </div>
+                                </div>
+                            </button>
+                        )}
+                    </div>
+                )}
                 {messages.slice(1).map((msg, index) => {
                     const content = JSON.parse(msg.content)
                     const { title, brief, response } = content[0] as MessageContent;
-                    console.log("Context:",fileGroup && fileGroup["main.jsx"])
+                    console.log("Context:", fileGroup && fileGroup["main.jsx"])
 
                     return (
                         <div
@@ -62,7 +82,7 @@ const ChatComponent = () => {
                             className={`flex my-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
                             <div
-                                className={`flex flex-col px-4 shadow-sm bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground py-4 rounded-2xl w-full font-serif`}
+                                className={`flex overflow-auto flex-col px-4 shadow-sm bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground py-4 rounded-2xl w-full font-serif`}
                             >
                                 <ReactMarkdown>
                                     {response ? response : brief || JSON.parse(msg.content) || 'No content available'}
@@ -92,22 +112,3 @@ const ChatComponent = () => {
 }
 
 export default ChatComponent
-
-/*{
-
-[
-    {
-      "title": "Todo App",
-      "brief": "This Todo application allows users to add, remove, and check off tasks as completed. It leverages React for state management and Tailwind CSS for styling the user interface. Interactions are handled through React's state hooks.",
-      "files": [
-        {
-          "main.jsx": {
-            "file": {
-              "contents": "import React, { useState } from 'react';\nimport ReactDOM from 'react-dom/client';\nimport './index.css';\n\nfunction App() {\n  const [todos, setTodos] = useState([]);\n  const [input, setInput] = useState('');\n\n  const addTodo = () => {\n    if (input) {\n      setTodos([...todos, { text: input, completed: false }]);\n      setInput('');\n    }\n  };\n\n  const toggleTodo = (index) => {\n    const newTodos = [...todos];\n    newTodos[index].completed = !newTodos[index].completed;\n    setTodos(newTodos);\n  };\n\n  const removeTodo = (index) => {\n    const newTodos = todos.filter((_, i) => i !== index);\n    setTodos(newTodos);\n  };\n\n  return (\n    <div className=\"min-h-screen bg-gray-100 p-8\">\n      <div className=\"max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden\">\n        <div className=\"p-8\">\n          <h1 className=\"text-3xl font-bold text-gray-900 mb-4\">Todo App</h1>\n          <div className=\"flex mb-4\">\n            <input\n              type=\"text\"\n              value={input}\n              onChange={(e) => setInput(e.target.value)}\n              className=\"flex-grow p-2 border border-gray-300 rounded mr-2\"\n              placeholder=\"Add a new task\"\n            />\n            <button\n              onClick={addTodo}\n              className=\"px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors\"\n            >\n              Add\n            </button>\n          </div>\n          <ul>\n            {todos.map((todo, index) => (\n              <li key={index} className={`flex justify-between items-center mb-2 p-2 rounded ${todo.completed ? 'bg-green-100' : 'bg-white'} shadow\"`}\n>\n                <span className={todo.completed ? 'line-through text-gray-500' : 'text-gray-900'} onClick={() => toggleTodo(index)}>{todo.text}</span>\n                <button onClick={() => removeTodo(index)} className=\"text-red-500 hover:text-red-600\">Remove</button>\n              </li>\n            ))}\n          </ul>\n        </div>\n      </div>\n    </div>\n  );\n}\n\nconst root = ReactDOM.createRoot(document.getElementById('root'));\nroot.render(<App />);"
-            }
-          }
-        }
-      ]
-    }
-  ]
-}*/

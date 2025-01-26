@@ -1,5 +1,28 @@
 import type { Config } from "tailwindcss";
 
+import colors from "tailwindcss/colors";
+
+const generateSafelist = (): string[] => {
+	const safelist: string[] = [];
+	const colorKeys = Object.keys(colors);
+
+	colorKeys.forEach((color) => {
+		const colorShades = colors[color as keyof typeof colors];
+
+		if (typeof colorShades === "object") {
+			for (const shade in colorShades) {
+				safelist.push(`text-${color}-${shade}`);
+				safelist.push(`bg-${color}-${shade}/10`);
+			}
+		} else {
+			safelist.push(`text-${color}`);
+			safelist.push(`bg-${color}/10`);
+		}
+	});
+
+	return safelist;
+};
+
 export default {
     darkMode: ["class"],
     content: [
@@ -7,6 +30,7 @@ export default {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: generateSafelist(),
   theme: {
   	extend: {
   		colors: {

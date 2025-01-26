@@ -39,12 +39,12 @@ const InputBox: React.FC<InputBoxProps> = ({ onSendMessage }) => {
         rows={2}
       />
       <div className='flex justify-between items-center'>
-        <button className='p-2 border text-white rounded-xl hover:bg-accent-foreground/5 transition-colors'>
+        <button className='p-2 border text-accent-foreground rounded-xl hover:bg-accent-foreground/5 transition-colors'>
           <Paperclip />
         </button>
         <button
           onClick={handleSend}
-          className="p-2 bg-white text-accent rounded-xl hover:bg-gray-200 transition-colors"
+          className="p-2 bg-accent-foreground text-accent rounded-xl hover:bg-gray-200 transition-colors"
         >
           <ArrowUp />
         </button>
