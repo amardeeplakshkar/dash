@@ -51,9 +51,9 @@ const ChatComponent = () => {
 
     return (
         <div className='flex bg-white/5 flex-col backdrop-blur-[2px] border p-2 rounded-xl'>
-            <ScrollArea className="p-4 h-[72dvh]">
+            <ScrollArea className="p-4 h-[68dvh]">
                 {messages.length <= 1 && (
-                    <div className='h-[68dvh] flex-1 flex flex-col items-center justify-center w-full'>
+                    <div className='h-[64dvh] flex-1 flex flex-col items-center justify-center w-full'>
                         {DemoApps.map((item, index) =>
                             <button onClick={() => sendUserMessage(JSON.stringify(item.prompt as string))} key={index} className='flex overflow-auto px-4 shadow-sm bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground py-4 my-2 rounded-2xl w-full font-serif gap-2 items-center'>
                                 <div className='bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground p-2 rounded-xl'>

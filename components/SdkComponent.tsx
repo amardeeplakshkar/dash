@@ -48,10 +48,9 @@ root.render(<App />);`);
     if (fileGroup && fileGroup['main.jsx'] && fileGroup['main.jsx'].file.contents) {
       const newCode = fileGroup['main.jsx'].file.contents;
       setCode(newCode);
-      runCode()
+      
       if (editorRef.current) {
         editorRef.current.setValue(newCode);
-        runCode();
       }
     }
   }, [fileGroup]);
