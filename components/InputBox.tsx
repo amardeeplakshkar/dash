@@ -1,5 +1,6 @@
 'use client'
 
+import { ArrowUp, Paperclip } from 'lucide-react';
 import React, { useState } from 'react';
 
 interface InputBoxProps {
@@ -11,32 +12,43 @@ const InputBox: React.FC<InputBoxProps> = ({ onSendMessage }) => {
 
   const handleSend = () => {
     if (prompt.trim()) {
-      onSendMessage(prompt as string);
+      onSendMessage(JSON.stringify(prompt));
       setPrompt('');
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter') {
-      handleSend();
+      if (e.shiftKey) {
+        return;
+      } else {
+        e.preventDefault();
+        handleSend();
+      }
     }
   };
 
   return (
-    <div>
-      <input
+    <div className='border p-2 rounded-2xl'>
+      <textarea
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
         onKeyPress={handleKeyPress}
         placeholder="Type your message..."
-        className="w-full p-2 border rounded-lg bg-transparent"
+        className="w-full p-2 border rounded-lg bg-transparent outline-none border-none resize-none"
+        rows={2}
       />
-      <button
-        onClick={handleSend}
-        className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-      >
-        Send
-      </button>
+      <div className='flex justify-between items-center'>
+        <button className='p-2 border text-white rounded-xl hover:bg-accent-foreground/5 transition-colors'>
+          <Paperclip />
+        </button>
+        <button
+          onClick={handleSend}
+          className="p-2 bg-white text-accent rounded-xl hover:bg-gray-200 transition-colors"
+        >
+          <ArrowUp />
+        </button>
+      </div>
     </div>
   );
 };
