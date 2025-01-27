@@ -1,87 +1,46 @@
 'use client'
-import React, { useState } from 'react';
-import { usePollinationsChat } from '@pollinations/react';
-import ReactMarkdown from 'react-markdown';
 
-const ChatComponent = () => {
-  const [input, setInput] = useState('');
-  const { sendUserMessage, messages } = usePollinationsChat([
-    { role: "system", content: `You are an advanced AI code generator. Always respond with JSON objects in the following format:
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+// import ReactDOM from 'react-dom/client';
 
-{
-  "commentary": "<Provide an overview of the solution and a step-by-step explanation of what the code does. Include details like framework, features, dependencies, and design considerations.>",
-  "template": "<A concise identifier for the type of solution, e.g., 'nextjs', 'react', 'python', etc.>",
-  "title": "<A descriptive title for the project or code, e.g., 'Todo App', 'API Server', etc.>",
-  "description": "<A brief explanation of what the project does and its key features.>",
-  "additional_dependencies": [<List of additional dependencies the project requires, if any, as strings. Leave empty if none.>],
-  "has_additional_dependencies": <true/false based on whether there are additional dependencies>,
-  "install_dependencies_command": "<Command to install additional dependencies, if any. Leave empty if none.>",
-  "port": <Default port number for the project, if applicable. Leave empty or null if not applicable.>,
-  "file_path": "<Relative file path of the main code file in the project.>",
-  "code": "<Provide the complete code for the solution.>"
+const quotes = [
+  'The only way to do great work is to love what you do. - Steve Jobs',
+  'Life is what happens when you’re busy making other plans. - John Lennon',
+  'The best time to plant a tree was twenty years ago. The second best time is now. - Chinese Proverb',
+  'Your time is limited, don’t waste it living someone else’s life. - Steve Jobs',
+  'You only live once, but if you do it right, once is enough. - Mae West'
+];
+
+function getRandomQuote() {
+  return quotes[Math.floor(Math.random() * quotes.length)];
 }
 
-Guidelines for Output:
+export default function App() {
+  const [quote, setQuote] = useState(getRandomQuote());
+  const [bgImage, setBgImage] = useState('');
 
-    Ensure all fields are filled appropriately. Use an empty string (""), empty array ([]), or null where applicable if the field is not relevant.
-    The "code" field should contain complete, functional code formatted for readability and correctness.
-    Tailor the "commentary" field to explain the code structure, the tools used, and the approach taken.
-    Use "template" to classify the type of project, ensuring it aligns with the solution provided.
-    Include "additional_dependencies" and installation instructions if external libraries are needed.
-
-Always adhere to this format in your responses, providing functional and well-documented solutions. Here is an example of how the output should be structured:`},
-  ], { 
-    seed: 42,
-    model: 'openai'
-  });
-
-  const handleSend = () => {
-    if (input.trim()) {
-      sendUserMessage(input);
-      setInput('');
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-
+  useEffect(() => {
+    const changeBackgroundAndQuote = () => {
+      const randomNumber = Math.floor(Math.random() * 100) + 1;
+      setBgImage(`https://image.pollinations.ai/prompt/motivational%20background%20${randomNumber}?nologo=true&model=flux-turbo&seed=${randomNumber}`);
+      setQuote(getRandomQuote());
+      console.log(quote);
+      
+    };
+    changeBackgroundAndQuote();
+    const interval = setInterval(changeBackgroundAndQuote, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="flex flex-col h-[92dvh]">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg, index) => (
-          <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[70%] p-3 rounded-lg ${
-              msg.role === 'user' ? 'bg-blue-100 text-blue-900' : 'bg-gray-100 text-gray-900'
-            }`}>
-              <span className="mr-2">{msg.role === 'user' ? '🐦' : '🌸'}</span>
-              <ReactMarkdown>{msg.content}</ReactMarkdown>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="p-4 border-t">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Type your message..."
-          className="w-full p-2 border rounded-lg"
-        />
-        <button 
-          onClick={handleSend} 
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-        >
-          Send
-        </button>
+    <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }} suppressHydrationWarning>
+      <div className="text-center p-8 rounded-lg shadow-lg bg-white opacity-90 transition-opacity duration-700">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">Motivational Quote</h1>
+        <Image lazyBoundary='500px' height={500} width={500} src={`https://image.pollinations.ai/prompt/motivational%20background`} alt="" />
+        {/* <p className="text-xl text-gray-600 mb-4">{quote}</p> */}
+        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors" onClick={() => { setBgImage(`https://image.pollinations.ai/prompt/motivational%20background%20${Math.floor(Math.random() * 100) + 1}?nologo=true&model=flux-turbo&seed=${Math.floor(Math.random() * 100) + 1}`); setQuote(getRandomQuote()); }}>New Quote</button>
       </div>
     </div>
   );
-};
-
-export default ChatComponent;
-    
+}

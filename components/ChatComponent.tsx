@@ -34,7 +34,7 @@ const ChatComponent = () => {
         { role: "system", content: SystemPrompt }
     ], {
         seed: 42,
-        model: 'openai',
+        model: 'openai-large',
     });
     const { userPrompt } = useUserPrompt();
     
