@@ -106,6 +106,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-Your Name - [@AmardeepDevs](https://twitter.com/AmardeepDevs)
+[@AmardeepDevs](https://twitter.com/AmardeepDevs)
 
 Project Link: [https://github.com/amardeeplakshkar/DASH](https://github.com/amardeeplakshkar/DASH)
