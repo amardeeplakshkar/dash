@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Moon, Sun, Zap } from "lucide-react"
+import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
@@ -14,14 +14,15 @@ import {
 import DashLogo from "./DashLogo"
 import { cn } from "@/lib/utils"
 import { DotPattern } from "./ui/dot-pattern"
+import Image from "next/image"
 
 export default function Navbar() {
     const { setTheme } = useTheme()
 
     return (
         <nav className="p-3 px-6 flex justify-between items-center" suppressHydrationWarning>
-            <div className="flex justify-center items-center">
-                <Zap fill="" />
+            <div className="flex justify-center gap-2 items-center">
+                <Image width={24} height={24} src={'/dash-logo.png'} alt="dash logo"/>
                 <DashLogo />
             </div>
             <DropdownMenu>
