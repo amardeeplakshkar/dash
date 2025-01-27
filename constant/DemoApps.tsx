@@ -9,9 +9,9 @@ export const DemoApps = [
     },
     {
       name: "Quote Generator App",
-      description: "An inspiring app that delivers motivational quotes paired with stunning Unsplash background images.",
+      description: "An inspiring app that delivers motivational quotes paired with stunning background images.",
       icon: <Sparkles className='w-6 h-6 text-yellow-500' />,
-      prompt: `Create a visually engaging one-page app that generates random motivational quotes, with dynamic Unsplash backgrounds and smooth fade transitions.`
+      prompt: `Create a visually engaging one-page app that generates random motivational quotes, with dynamic backgrounds and smooth fade transitions.`
     },
     {
       name: "Poll Creator App",
