@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import React, { useEffect } from 'react'
 import InputBox from './InputBox'
@@ -8,6 +9,7 @@ import { Terminal } from 'lucide-react';
 import { ScrollArea } from './ui/scroll-area';
 import { useFileGroup } from './context/FileGroupContext';
 import { DemoApps } from '@/constant/DemoApps';
+import { useUserPrompt } from './context/UserPrompt';
 
 export interface File {
     contents: string;
@@ -34,9 +36,15 @@ const ChatComponent = () => {
         seed: 42,
         model: 'openai',
     });
+    const { userPrompt } = useUserPrompt();
+    
+    useEffect(() => {
+        if (userPrompt) {
+            sendUserMessage(JSON.stringify(userPrompt));
+        }
+    }, [userPrompt]);
 
-    const { setFileGroup, fileGroup } = useFileGroup();
-
+    const { setFileGroup } = useFileGroup();
     useEffect(() => {
         if (messages.length > 1) {
             const content = JSON.parse(messages[messages.length - 1].content);
@@ -47,11 +55,9 @@ const ChatComponent = () => {
         }
     }, [messages, setFileGroup]);
 
-
-
     return (
         <div className='flex bg-white/5 flex-col backdrop-blur-[2px] border p-2 rounded-xl'>
-            <ScrollArea className="p-4 h-[68dvh]">
+            <ScrollArea className="p-4 h-[68dvh] overflow-x-auto">
                 {messages.length <= 1 && (
                     <div className='h-[64dvh] flex-1 flex flex-col items-center justify-center w-full'>
                         {DemoApps.map((item, index) =>
@@ -72,17 +78,23 @@ const ChatComponent = () => {
                     </div>
                 )}
                 {messages.slice(1).map((msg, index) => {
-                    const content = JSON.parse(msg.content)
-                    const { title, brief, response } = content[0] as MessageContent;
-                    console.log("Context:", fileGroup && fileGroup["main.jsx"])
+                     let content;
+    try {
+        content = JSON.parse(msg.content);
+    } catch (error) {
+        console.error("Invalid JSON content:", error);
+        content = { title: "Error", brief: "Invalid message content", response: "" };
+    }
+
+    const { title, brief, response } = content[0] || {};
 
                     return (
                         <div
                             key={index}
-                            className={`flex my-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                            className={`flex flex-wrap my-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
                             <div
-                                className={`flex overflow-auto flex-col px-4 shadow-sm bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground py-4 rounded-2xl w-full font-serif`}
+                                className={`flex text-sm overflow-auto flex-col px-4 shadow-sm bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground py-4 rounded-2xl w-full font-serif`}
                             >
                                 <ReactMarkdown>
                                     {response ? response : brief || JSON.parse(msg.content) || 'No content available'}

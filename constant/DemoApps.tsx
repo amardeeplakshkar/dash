@@ -20,10 +20,26 @@ export const DemoApps = [
       prompt: `Build a responsive, one-page app where users can create polls with various choices, view live voting results, and enjoy interactive animations as results update in real-time.`
     },
     {
-      name: "Travel Inspiration App",
-      description: "Explore breathtaking travel destinations with vibrant images powered by Unsplash and immersive UX design.",
+      name: "Restaurant Website",
+      description: "A visually appealing and user-friendly website for a new upscale restaurant named 'Gourmet Haven'.",
       icon: <MapPin className='w-6 h-6 text-red-500' />,
-      prompt: `Design a visually appealing one-page travel inspiration app that showcases beautiful travel destinations with stunning images, interactive details, and smooth scroll effects.`
+      prompt: `This is the user's prompt: **Project Name: Gourmet Haven** Design a visually appealing and user-friendly website for a new upscale restaurant named "Gourmet Haven". The website should feature the following sections: 1. **Homepage**: An enticing introduction with high-quality images of signature dishes, a brief description of the restaurant's concept, and a call-to-action button for reservations.
+
+2. **Menu**: A detailed menu page showcasing all food and beverage offerings, including descriptions, prices, and vibrant images. Include filters for dietary preferences (vegan, gluten-free, etc.).
+
+3. **About Us**: A section detailing the restaurant's story, philosophy, and the chefs behind the culinary creations. Include behind-the-scenes photos to emphasize the restaurant's dedication to quality.
+
+4. **Location & Hours**: A map integration showcasing the restaurant's location, along with operating hours and contact information.
+
+5. **Events**: A calendar feature for upcoming events, special dining nights, and promotions, with the option to RSVP or book private events.
+
+6. **Testimonials**: A section that highlights customer reviews and dining experiences to establish credibility and attract new patrons.
+
+7. **Blog**: A blog page to share culinary tips, recipes, and updates on the restaurant, helping to engage customers and improve SEO.
+
+8. **Contact**: A contact form for inquiries, along with social media links and a newsletter subscription option to keep customers informed.
+
+The overall design should exude a luxurious yet welcoming atmosphere, utilizing a color palette of warm, earthy tones, and elegant typography. Ensure that the website is mobile-responsive and optimized for search engines`
     }
   ];
   
