@@ -10,6 +10,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { useFileGroup } from './context/FileGroupContext';
 import { DemoApps } from '@/constant/DemoApps';
 import { useUserPrompt } from './context/UserPrompt';
+import toast from 'react-hot-toast';
 
 export interface File {
     contents: string;
@@ -33,11 +34,11 @@ const ChatComponent = () => {
     const { sendUserMessage, messages } = usePollinationsChat([
         { role: "system", content: SystemPrompt }
     ], {
-        seed: 42,
-        model: 'openai-large',
+        seed: Math.floor(Math.random() * 1000000),
+        model: 'openai',
     });
     const { userPrompt } = useUserPrompt();
-    
+
     useEffect(() => {
         if (userPrompt) {
             sendUserMessage(JSON.stringify(userPrompt));
@@ -47,11 +48,18 @@ const ChatComponent = () => {
     const { setFileGroup } = useFileGroup();
     useEffect(() => {
         if (messages.length > 1) {
-            const content = JSON.parse(messages[messages.length - 1].content);
-            const { files } = content[0] as MessageContent;
-            const filesGroup = files?.[0] as Files;
-            console.log("use effect", filesGroup);
-            setFileGroup(filesGroup);
+            try {
+                const content = JSON.parse(messages[messages.length - 1].content);
+                const { files } = content[0] as MessageContent;
+                const filesGroup = files?.[0] as Files;
+
+                if (filesGroup) {
+                    setFileGroup(filesGroup);
+                    toast.success('Code Generated!');
+                }
+            } catch (error) {
+                console.error('Error parsing message content:', error);
+            }
         }
     }, [messages, setFileGroup]);
 
@@ -59,7 +67,7 @@ const ChatComponent = () => {
         <div className='flex bg-white/5 flex-col backdrop-blur-[2px] border p-2 rounded-xl'>
             <ScrollArea className="p-4 h-[68dvh] overflow-x-auto">
                 {messages.length <= 1 && (
-                    <div className='h-[64dvh] flex-1 flex flex-col items-center justify-center w-full'>
+                    <div className='h-[62dvh] flex-1 flex flex-col items-center justify-center w-full'>
                         {DemoApps.map((item, index) =>
                             <button onClick={() => sendUserMessage(JSON.stringify(item.prompt as string))} key={index} className='flex overflow-auto px-4 shadow-sm bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground py-4 my-2 rounded-2xl w-full font-serif gap-2 items-center'>
                                 <div className='bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground p-2 rounded-xl'>
@@ -78,15 +86,16 @@ const ChatComponent = () => {
                     </div>
                 )}
                 {messages.slice(1).map((msg, index) => {
-                     let content;
-    try {
-        content = JSON.parse(msg.content);
-    } catch (error) {
-        console.error("Invalid JSON content:", error);
-        content = { title: "Error", brief: "Invalid message content", response: "" };
-    }
+                    let content;
+                    try {
+                        content = JSON.parse(msg.content);
+                    } catch (error) {
+                        console.error("Invalid JSON content:", error);
+                        content = { title: "Error", brief: "Invalid message content", response: "" };
+                        toast.error('Failed to parse message content!');
+                    }
 
-    const { title, brief, response } = content[0] || {};
+                    const { title, brief, response } = content[0] || {};
 
                     return (
                         <div

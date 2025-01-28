@@ -1,46 +1,131 @@
-'use client'
+"use client";
 
-import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
-// import ReactDOM from 'react-dom/client';
+import { useTheme } from "next-themes";
+import {
+  SandpackProvider,
+  SandpackLayout,
+  SandpackCodeEditor,
+  SandpackPreview,
+  SandpackConsole,
+  useSandpack,
+} from "@codesandbox/sandpack-react";
+import { dracula, githubLight } from "@codesandbox/sandpack-themes";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Code2, Play, Terminal } from "lucide-react";
 
-const quotes = [
-  'The only way to do great work is to love what you do. - Steve Jobs',
-  'Life is what happens when you’re busy making other plans. - John Lennon',
-  'The best time to plant a tree was twenty years ago. The second best time is now. - Chinese Proverb',
-  'Your time is limited, don’t waste it living someone else’s life. - Steve Jobs',
-  'You only live once, but if you do it right, once is enough. - Mae West'
-];
-
-function getRandomQuote() {
-  return quotes[Math.floor(Math.random() * quotes.length)];
-}
+const files = {
+  "/App.tsx": `import { useState } from 'react';
 
 export default function App() {
-  const [quote, setQuote] = useState(getRandomQuote());
-  const [bgImage, setBgImage] = useState('');
-
-  useEffect(() => {
-    const changeBackgroundAndQuote = () => {
-      const randomNumber = Math.floor(Math.random() * 100) + 1;
-      setBgImage(`https://image.pollinations.ai/prompt/motivational%20background%20${randomNumber}?nologo=true&model=flux-turbo&seed=${randomNumber}`);
-      setQuote(getRandomQuote());
-      console.log(quote);
-      
-    };
-    changeBackgroundAndQuote();
-    const interval = setInterval(changeBackgroundAndQuote, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  const [count, setCount] = useState(0);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }} suppressHydrationWarning>
-      <div className="text-center p-8 rounded-lg shadow-lg bg-white opacity-90 transition-opacity duration-700">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Motivational Quote</h1>
-        <Image lazyBoundary='500px' height={500} width={500} src={`https://image.pollinations.ai/prompt/motivational%20background`} alt="" />
-        {/* <p className="text-xl text-gray-600 mb-4">{quote}</p> */}
-        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors" onClick={() => { setBgImage(`https://image.pollinations.ai/prompt/motivational%20background%20${Math.floor(Math.random() * 100) + 1}?nologo=true&model=flux-turbo&seed=${Math.floor(Math.random() * 100) + 1}`); setQuote(getRandomQuote()); }}>New Quote</button>
+    <div className="p-8 max-w-xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4">
+        Interactive Counter
+      </h1>
+      <p className="mb-4">
+        Click the button to increment the counter!
+      </p>
+      <div className="flex items-center gap-4">
+        <button
+          onClick={() => setCount(count + 1)}
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+        >
+          Count: {count}
+        </button>
       </div>
+    </div>
+  );
+}`,
+  "/styles.css": `
+/* Add your custom styles here */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}`,
+};
+
+const CustomHeader = () => {
+  const { sandpack } = useSandpack();
+  
+  return (
+    <div className="flex items-center justify-between p-4 border-b">
+      <div className="flex items-center gap-2">
+        <Code2 className="w-5 h-5" />
+        <h2 className="text-lg font-semibold">Code Editor</h2>
+      </div>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => sandpack.runSandpack()}
+        className="flex items-center gap-2"
+      >
+        <Play className="w-4 h-4" />
+        Run Code
+      </Button>
+    </div>
+  );
+};
+
+export default function SandpackEditor() {
+  const { theme } = useTheme();
+
+  return (
+    <div className="rounded-lg border shadow-sm">
+      <SandpackProvider
+        theme={theme && theme === "dark" ? dracula : githubLight}
+        template={'react-ts'}
+        files={files}
+        options={{
+          activeFile: '/App.tsx',
+          visibleFiles: Object.keys(files || {}),
+          recompileMode: "immediate",
+          recompileDelay: 300,
+        }}
+        customSetup={{
+          dependencies: {
+            "react": "^18.0.0",
+            "react-dom": "^18.0.0",
+            "@types/react": "^18.0.0",
+            "@types/react-dom": "^18.0.0"
+          },
+          entry: "/index.tsx"
+        }}
+      >
+        <CustomHeader />
+        <SandpackLayout>
+          <div className="flex-1">
+            <Tabs defaultValue="code" className="w-full">
+              <TabsList className="w-full justify-start rounded-none border-b">
+                <TabsTrigger value="code" className="gap-2">
+                  <Code2 className="w-4 h-4" />
+                  Editor
+                </TabsTrigger>
+                <TabsTrigger value="console" className="gap-2">
+                  <Terminal className="w-4 h-4" />
+                  Console
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="code" className="mt-0">
+                <SandpackCodeEditor
+                  showLineNumbers
+                  showInlineErrors
+                  wrapContent
+                  className="h-[400px]"
+                />
+              </TabsContent>
+              <TabsContent value="console" className="mt-0">
+                <SandpackConsole className="h-[400px]" />
+              </TabsContent>
+            </Tabs>
+          </div>
+          <div className="border-l">
+            <SandpackPreview className="h-[500px]" />
+          </div>
+        </SandpackLayout>
+      </SandpackProvider>
     </div>
   );
 }

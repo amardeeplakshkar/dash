@@ -2,7 +2,7 @@ import { FileGroupProvider } from "@/components/context/FileGroupContext";
 import { UserPromptProvider } from "@/components/context/UserPrompt";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider"
-
+import { Toaster } from "react-hot-toast";
 export default function Provider({
     children,
 }: Readonly<{
@@ -16,6 +16,7 @@ export default function Provider({
                 enableSystem
                 disableTransitionOnChange
             >
+                <Toaster/>
                  <UserPromptProvider>
                 <FileGroupProvider>
                 <Navbar />

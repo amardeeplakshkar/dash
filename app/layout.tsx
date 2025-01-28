@@ -25,7 +25,6 @@ export const metadata: Metadata = {
     },
   ],
   creator: "Amardeep Lakshkar",
-  viewport: "width=device-width, initial-scale=1.0",
   robots: "index, follow", 
   twitter: {
     card: "summary_large_image", 

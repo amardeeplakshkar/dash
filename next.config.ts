@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -15,7 +14,7 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/:path*',
+        source: '/webcontainer',
         headers: [
           {
             key: 'Cross-Origin-Embedder-Policy',
@@ -28,7 +27,7 @@ const nextConfig = {
         ],
       },
     ];
-  },
+  }
 };
 
 export default nextConfig;
