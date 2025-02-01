@@ -10,13 +10,14 @@ import {
     useSandpack,
 } from "@codesandbox/sandpack-react";
 import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
-import { ArrowBigLeft, Play } from 'lucide-react';
+import { Expand, Play } from 'lucide-react';
 import { TabsContent } from './ui/tabs';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './ui/resizable';
 import { githubLight, sandpackDark, } from '@codesandbox/sandpack-themes';
 import { useTheme } from 'next-themes';
 import { Button } from './ui/button';
 import { useFileGroup } from './context/FileGroupContext';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
 
 interface NavbarProps {
     setActiveTab: (tab: string) => void;
@@ -28,7 +29,8 @@ const Navbar: React.FC<NavbarProps> = ({ setActiveTab }) => {
 
     const handleRunCode = () => {
         sandpack.runSandpack()
-        setActiveTab('preview');
+        setActiveTab('code');
+        setTimeout(() => { setActiveTab('preview') }, 1000);
     }
 
     useEffect(() => {
@@ -38,28 +40,45 @@ const Navbar: React.FC<NavbarProps> = ({ setActiveTab }) => {
     }, [fileGroup])
     return (
         <nav className='w-full p-1 flex justify-between items-center'>
-            <div className='hover:bg-accent dark:text-accent-foreground p-1 rounded-md cursor-pointer'>
-                <ArrowBigLeft />
-            </div>
             <div className='flex justify-center'>
-                <TabsList className="inline-flex items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground px-1 py-0 border h-8">
-                    <TabsTrigger className='justify-center whitespace-nowrap rounded-md transition-all disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow font-normal text-xs py-1 px-2 gap-1 flex items-center' value="code">Code</TabsTrigger>
+                <TabsList className="inline-flex text-[0.60rem] sm:text-xs items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground px-1 py-0 border h-8">
+                    <TabsTrigger className='justify-center whitespace-nowrap rounded-md transition-all disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow font-normal py-1 sm:px-2 px-1 gap-1 flex items-center' value="code">Code</TabsTrigger>
                     <TabsTrigger
                         onClick={handleRunCode}
-                        className='justify-center whitespace-nowrap rounded-md transition-all disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow font-normal text-xs py-1 px-2 gap-1 flex items-center' value="preview">Preview</TabsTrigger>
+                        className='justify-center whitespace-nowrap rounded-md transition-all disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow font-normal py-1 px-2 gap-1 flex items-center' value="preview">Preview</TabsTrigger>
                 </TabsList>
             </div>
-            <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleRunCode()}
-                className="flex bg-accent/50 dark:text-accent-foreground items-center gap-2 p-2 text-xs justify-center"
-            >
-                <Play size={16} />
-                <span className='sm:block hidden'>
-                    Run
-                </span>
-            </Button>
+            <div className='flex justify-center items-center gap-2'>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className='flex bg-accent/50 dark:text-accent-foreground items-center gap-2 p-2 text-xs justify-center'
+                        >
+                            <Expand />
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className='m-0 w-full h-full max-w-[100%] max-h-[100%]'>
+                        <DialogTitle></DialogTitle>
+                        <SandpackPreview
+                            className='rounded-xl overflow-hidden h-[90dvh]'
+                            showOpenInCodeSandbox={false}
+                        />
+                    </DialogContent>
+                </Dialog>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleRunCode()}
+                    className="flex bg-accent/50 dark:text-accent-foreground items-center gap-2 p-2 text-xs justify-center"
+                >
+                    <Play size={16} />
+                    <span className='sm:block hidden'>
+                        Run
+                    </span>
+                </Button>
+            </div>
         </nav>
     )
 }

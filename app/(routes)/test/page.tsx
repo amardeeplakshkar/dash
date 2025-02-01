@@ -8,48 +8,20 @@ import {
   SandpackPreview,
   SandpackConsole,
   useSandpack,
+  SandpackFileExplorer,
 } from "@codesandbox/sandpack-react";
 import { dracula, githubLight } from "@codesandbox/sandpack-themes";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Code2, Play, Terminal } from "lucide-react";
 
-const files = {
-  "/App.tsx": `import { useState } from 'react';
-
-export default function App() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <div className="p-8 max-w-xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">
-        Interactive Counter
-      </h1>
-      <p className="mb-4">
-        Click the button to increment the counter!
-      </p>
-      <div className="flex items-center gap-4">
-        <button
-          onClick={() => setCount(count + 1)}
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-        >
-          Count: {count}
-        </button>
-      </div>
-    </div>
-  );
-}`,
-  "/styles.css": `
-/* Add your custom styles here */
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-}`,
-};
+import { viteShadcn } from "@/constant/templates/vite-shadcn";
+import ChatComponent from "@/components/ChatComponent";
+import { useFileGroup } from "@/components/context/FileGroupContext";
 
 const CustomHeader = () => {
   const { sandpack } = useSandpack();
-  
+
   return (
     <div className="flex items-center justify-between p-4 border-b">
       <div className="flex items-center gap-2">
@@ -65,33 +37,34 @@ const CustomHeader = () => {
         <Play className="w-4 h-4" />
         Run Code
       </Button>
-    </div>
+      <button onClick={() => console.log("")} className="bg-red-500">
+        code
+      </button>
+    </div >
   );
 };
 
 export default function SandpackEditor() {
   const { theme } = useTheme();
-
+  const { fileGroup } = useFileGroup();
+  const newFiles = fileGroup && fileGroup;
+  const mergedFiles = { ...viteShadcn[0]?.template?.files, ...newFiles };
+  
   return (
     <div className="rounded-lg border shadow-sm">
+      <ChatComponent />
       <SandpackProvider
-        theme={theme && theme === "dark" ? dracula : githubLight}
-        template={'react-ts'}
-        files={files}
+        theme={theme && theme === "light" ? githubLight : dracula}
+        files={mergedFiles}
+        template="react"
         options={{
-          activeFile: '/App.tsx',
-          visibleFiles: Object.keys(files || {}),
           recompileMode: "immediate",
           recompileDelay: 300,
+          externalResources: [
+            "https://cdn.tailwindcss.com",
+          ]
         }}
         customSetup={{
-          dependencies: {
-            "react": "^18.0.0",
-            "react-dom": "^18.0.0",
-            "@types/react": "^18.0.0",
-            "@types/react-dom": "^18.0.0"
-          },
-          entry: "/index.tsx"
         }}
       >
         <CustomHeader />
@@ -108,12 +81,13 @@ export default function SandpackEditor() {
                   Console
                 </TabsTrigger>
               </TabsList>
-              <TabsContent value="code" className="mt-0">
+              <TabsContent value="code" className="mt-0 grid grid-cols-4">
+                <SandpackFileExplorer className="col-span-1" />
                 <SandpackCodeEditor
                   showLineNumbers
                   showInlineErrors
                   wrapContent
-                  className="h-[400px]"
+                  className="h-[400px] col-span-3"
                 />
               </TabsContent>
               <TabsContent value="console" className="mt-0">

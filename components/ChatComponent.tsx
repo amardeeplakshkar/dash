@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import InputBox from './InputBox'
 import { usePollinationsChat } from '@pollinations/react';
 import ReactMarkdown from 'react-markdown';
@@ -31,6 +31,7 @@ export interface MessageContent {
 
 
 const ChatComponent = () => {
+    const latestMessageRef = useRef<HTMLDivElement | null>(null);
     const { sendUserMessage, messages } = usePollinationsChat([
         { role: "system", content: SystemPrompt }
     ], {
@@ -38,6 +39,12 @@ const ChatComponent = () => {
         model: 'openai',
     });
     const { userPrompt } = useUserPrompt();
+
+    useEffect(() => {
+        if (latestMessageRef.current) {
+            latestMessageRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, [messages]);
 
     useEffect(() => {
         if (userPrompt) {
@@ -100,6 +107,7 @@ const ChatComponent = () => {
                     return (
                         <div
                             key={index}
+                            ref={index === messages.length - 2 ? latestMessageRef : null}
                             className={`flex flex-wrap my-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
                             <div
