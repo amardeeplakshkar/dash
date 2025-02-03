@@ -50,6 +50,7 @@ const Navbar: React.FC<NavbarProps> = ({ setActiveTab }) => {
             </div>
             <div className='flex justify-center items-center gap-2'>
                 <Dialog>
+                    <DialogTitle className='hidden'></DialogTitle>
                     <DialogTrigger asChild>
                         <Button
                             variant="outline"
@@ -59,11 +60,13 @@ const Navbar: React.FC<NavbarProps> = ({ setActiveTab }) => {
                             <Expand />
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className='m-0 w-full h-full max-w-[100%] max-h-[100%]'>
-                        <DialogTitle></DialogTitle>
+                    <DialogContent className='m-0 rounded-xl flex w-full h-full max-w-[95dvw] max-h-[95dvh]'>
                         <SandpackPreview
-                            className='rounded-xl overflow-hidden h-[90dvh]'
+                            className='rounded-xl overflow-hidden h-full w-full'
                             showOpenInCodeSandbox={false}
+                            showRefreshButton={false}
+                            showOpenNewtab={false}
+                            showRestartButton={false}
                         />
                     </DialogContent>
                 </Dialog>
@@ -131,8 +134,18 @@ function App() {
   );
 }
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
-                        `
+root.render(<App />);`,
+"package.json": fileGroup ? fileGroup['package.json'].file.contents : `{
+  "dependencies": {
+    "react": "latest",
+    "react-dom": "latest",
+    "react-scripts": "latest",
+    "tailwindcss": "latest",
+    "lucide-react": "latest"
+  },
+  "main": "/index.js",
+  "devDependencies": {}
+}`
                     }}
                     template="react"
                     options={{

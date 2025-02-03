@@ -30,7 +30,22 @@ Example Output Structure:
           "file": {
             "contents": "import React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport './index.css';\n\nfunction App() {\n  return (\n    <div className=\"min-h-screen bg-gray-100 p-8\">\n      <div className=\"max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl\">\n        <div className=\"p-8\">\n          <h1 className=\"text-3xl font-bold text-gray-900 mb-4\">\n            Hello from WebContainer!\n          </h1>\n          <p className=\"text-gray-600\">\n            Edit this code and click Run to see changes. This component is styled with Tailwind CSS.\n          </p>\n          <button className=\"mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors\">\n            Click me\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n}\n\nconst root = ReactDOM.createRoot(document.getElementById('root'));\nroot.render(<App />);"
           }
-        }
+        },
+        "package.json": {
+          "file": {
+            "contents":"{
+  "dependencies": {
+    "react": "latest",
+    "react-dom": "latest",
+    "react-scripts": "latest",
+    "tailwindcss": "latest",
+    "lucide-react": "latest"
+  },
+  "main": "/index.js",
+  "devDependencies": {}
+}"
+            }
+            }    
       }
     ]
   }
