@@ -98,11 +98,11 @@ const ChatComponent = () => {
                         content = JSON.parse(msg.content);
                     } catch (error) {
                         console.error("Invalid JSON content:", error);
-                        content = { title: "Error", brief: "Invalid message content", response: "" };
+                        content = { title: null, brief: null, response: null };
                         toast.error('Failed to parse message content!');
                     }
 
-                    const { title, brief, response } = content[0] || {};
+                    const { title, brief, files } = content[0] || {};
 
                     return (
                         <div
@@ -114,15 +114,23 @@ const ChatComponent = () => {
                                 className={`flex text-sm overflow-auto flex-col px-4 shadow-sm bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground py-4 rounded-2xl w-full font-serif`}
                             >
                                 <ReactMarkdown>
-                                    {response ? response : brief || JSON.parse(msg.content) || 'No content available'}
+                                {
+                                msg.role === 'user' && JSON.parse(msg.content)
+                                }
                                 </ReactMarkdown>
-                                {msg.role === 'assistant' && !response && (
+                                <ReactMarkdown>
+                                    {
+                                        brief ? brief : content.response
+                                    }
+                                </ReactMarkdown>
+
+                                {msg.role === 'assistant' && files && (
                                     <div className="py-2 mt-2 pl-2 w-full md:w-max flex items-center border border-accent-foreground/10 rounded-xl select-none hover:bg-accent hover:cursor-pointer">
-                                        <div className='rounded-[0.5rem] p-3 bg-black/20 self-stretch flex items-center justify-center'>
+                                        <div className='rounded-[0.5rem] p-3 bg-black/20 '>
                                             <Terminal className='text-[#FF8800]' />
                                         </div>
                                         <div className="pl-2 pr-4 flex flex-col">
-                                            <span className="font-bold font-sans text-sm text-primary">{title}</span>
+                                            <span className="font-bold font-sans text-sm text-primary line-clamp-1">{title}</span>
                                             <span className="font-sans text-xs text-muted-foreground">Click to see fragment</span>
                                         </div>
                                     </div>

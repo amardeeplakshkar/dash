@@ -32,7 +32,6 @@ const InputBox: React.FC<InputBoxProps> = ({ onSendMessage }) => {
   const handleEnhancePrompt = async () => {
     if (prompt.trim()) {
       toast.promise(
-        // Start the async operation
         (async () => {
         const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}?system=You are tasked with enhancing the input prompts provided by the user. Your job is to take the given prompt, understand it, and rephrase it to be more descriptive, clear, and informative. You must focus on elaborating and refining the content without introducing any additional commentary or asking any questions. Your response should only include the enhanced version of the input prompt, with no extra explanation or information. Ensure the enhanced prompt is more detailed, precise, and easier to understand while staying true to the original idea or intention behind the prompt dont answer users query just enhance the prompt. basically you are a enhancer for a ai code generator. always refer queries as user's intent is to create a website about it in react`);
         const data = await response.text();

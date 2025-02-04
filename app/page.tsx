@@ -2,9 +2,10 @@
 import { useUserPrompt } from '@/components/context/UserPrompt'
 import { Button } from '@/components/ui/button'
 import { DemoApps } from '@/constant/DemoApps'
-import { ArrowUp, Paperclip } from 'lucide-react'
+import { ArrowUp, Sparkles } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
+import toast from 'react-hot-toast'
 const LandingPage = () => {
   const [promptString, setPromptString] = useState<string>('');
 
@@ -19,6 +20,27 @@ const LandingPage = () => {
       }
     }
   };
+
+  const handleEnhancePrompt = async () => {
+    if (promptString.trim()) {
+      toast.promise(
+        (async () => {
+          const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(promptString)}?system=You are tasked with enhancing the input prompts provided by the user. Your job is to take the given prompt, understand it, and rephrase it to be more descriptive, clear, and informative. You must focus on elaborating and refining the content without introducing any additional commentary or asking any questions. Your response should only include the enhanced version of the input prompt, with no extra explanation or information. Ensure the enhanced prompt is more detailed, precise, and easier to understand while staying true to the original idea or intention behind the prompt dont answer users query just enhance the prompt. basically you are a enhancer for a ai code generator. always refer queries as user's intent is to create a website about it in react`);
+          const data = await response.text();
+          setPromptString(data.trim());
+        })(),
+        {
+          loading: "Enhancing the prompt...",
+          success: "Prompt Enhanced! 🎉",
+          error: "Could not enhance the prompt. Please try again."
+        }
+      );
+    } else {
+      toast.error("Please enter a prompt to enhance.");
+    }
+  };
+
+
   const { setUserPrompt } = useUserPrompt();
   const router = useRouter()
 
@@ -47,8 +69,8 @@ const LandingPage = () => {
                   rows={2}
                 />
                 <div className='flex justify-between items-center'>
-                  <button className='p-2 border text-accent-foreground rounded-xl hover:bg-accent-foreground/5 transition-colors'>
-                    <Paperclip />
+                  <button onClick={handleEnhancePrompt} className='p-2 border text-accent-foreground rounded-xl hover:bg-accent-foreground/5 transition-colors'>
+                    <Sparkles />
                   </button>
                   <button
                     onClick={() => handlePrompt(promptString)}

@@ -15,14 +15,15 @@ import DashLogo from "./DashLogo"
 import { cn } from "@/lib/utils"
 import { DotPattern } from "./ui/dot-pattern"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 export default function Navbar() {
     const { setTheme } = useTheme()
-
+    const router = useRouter()
     return (
         <nav className="p-3 px-6 flex justify-between items-center" suppressHydrationWarning>
-            <div className="flex justify-center gap-2 items-center">
-                <Image width={24} height={24} src={'/dash-logo.png'} alt="dash logo"/>
+            <div onClick={() => router.push("/")} className="flex justify-center gap-2 items-center cursor-pointer">
+                <Image width={24} height={24} src={'/dash-logo.png'} alt="dash logo" />
                 <DashLogo />
             </div>
             <DropdownMenu>

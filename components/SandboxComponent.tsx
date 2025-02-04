@@ -38,6 +38,7 @@ const Navbar: React.FC<NavbarProps> = ({ setActiveTab }) => {
             handleRunCode()
         }
     }, [fileGroup])
+
     return (
         <nav className='w-full p-1 flex justify-between items-center'>
             <div className='flex justify-center'>
@@ -135,7 +136,7 @@ function App() {
 }
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);`,
-"package.json": fileGroup ? fileGroup['package.json'].file.contents : `{
+                        "package.json": fileGroup ? fileGroup['package.json'].file.contents : `{
   "dependencies": {
     "react": "latest",
     "react-dom": "latest",
@@ -179,7 +180,7 @@ root.render(<App />);`,
                         </TabsContent>
                         <TabsContent className='w-full' value='preview'>
                             <SandpackPreview
-                                className='rounded-xl overflow-hidden h-[81dvh]'
+                                className='rounded-xl overflow-hidden -mt-2 h-[82dvh]'
                                 showNavigator
                                 showOpenInCodeSandbox={false}
                                 showOpenNewtab
